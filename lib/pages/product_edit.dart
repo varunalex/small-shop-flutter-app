@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+
+import './../models/product.dart';
+
 import './../validation/validation.dart';
 
 class EditProductPage extends StatefulWidget {
   final Function addProduct;
   final Function updateProduct;
-  final Map<String, dynamic> product;
+  final Product product;
   final int productIndex;
   EditProductPage(
       {this.addProduct, this.updateProduct, this.product, this.productIndex});
@@ -27,7 +30,7 @@ class _EditProductPageState extends State<EditProductPage> {
   Widget _buildTitleTextField() {
     String label = 'Product title';
     return TextFormField(
-      initialValue: widget.product == null ? '' : widget.product['title'],
+      initialValue: widget.product == null ? '' : widget.product.title,
       decoration: InputDecoration(labelText: label),
       validator: (String value) {
         return Validator(label: label, value: value, required: true, min: 5)
@@ -44,7 +47,7 @@ class _EditProductPageState extends State<EditProductPage> {
   Widget _buildDescriptionTextField() {
     String label = 'Product Desciption';
     return TextFormField(
-      initialValue: widget.product == null ? '' : widget.product['description'],
+      initialValue: widget.product == null ? '' : widget.product.description,
       decoration: InputDecoration(labelText: label),
       maxLines: 4,
       validator: (String value) {
@@ -62,7 +65,7 @@ class _EditProductPageState extends State<EditProductPage> {
     String label = 'Product Price';
     return TextFormField(
       initialValue:
-          widget.product == null ? '' : widget.product['price'].toString(),
+          widget.product == null ? '' : widget.product.price.toString(),
       decoration: InputDecoration(labelText: label),
       keyboardType: TextInputType.numberWithOptions(),
       validator: (String value) {
@@ -117,10 +120,15 @@ class _EditProductPageState extends State<EditProductPage> {
     });
     if (!_formKey.currentState.validate()) return;
     _formKey.currentState.save();
+    Product data = Product(
+        title: _formData['title'],
+        price: _formData['price'],
+        description: _formData['description'],
+        image: _formData['image']);
     if (widget.product == null) {
-      widget.addProduct(_formData);
+      widget.addProduct(data);
     } else {
-      widget.updateProduct(widget.productIndex, _formData);
+      widget.updateProduct(widget.productIndex, data);
     }
 
     Navigator.pushReplacementNamed(context, '/products');
