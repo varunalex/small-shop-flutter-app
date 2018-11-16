@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import './../../models/product.dart';
-import './../../scoped_models/products.dart';
+import './../../scoped_models/connected_models.dart';
 
 import './ui_elements/title_defaut.dart';
 import './price_tag.dart';
@@ -37,7 +37,7 @@ class ProductCard extends StatelessWidget {
         ScopedModelDescendant(
           builder: (BuildContext context, Widget child, ProductsModel model) {
             return IconButton(
-              icon: Icon(model.products[productIndex].isFavorite
+              icon: Icon(model.allProducts[productIndex].isFavorite
                   ? Icons.favorite
                   : Icons.favorite_border),
               color: Colors.red,

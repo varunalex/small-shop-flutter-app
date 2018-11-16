@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import './../models/product.dart';
-import './../scoped_models/products.dart';
+import './../scoped_models/connected_models.dart';
 
 import './../validation/validation.dart';
 
@@ -84,7 +84,7 @@ class _EditProductPageState extends State<EditProductPage> {
           color: Theme.of(context).accentColor,
           textColor: Colors.white,
           onPressed: () => _onSubmit(model.addProduct, model.updateProduct,
-              model.selectedProductIndex),
+              model.selectProduct, model.selectedProductIndex),
         );
       },
     );
@@ -118,25 +118,24 @@ class _EditProductPageState extends State<EditProductPage> {
     );
   }
 
-  void _onSubmit(Function addProduct, Function updateProduct,
+  void _onSubmit(
+      Function addProduct, Function updateProduct, Function setSelectedProduct,
       [int selectedProductIndex]) {
     setState(() {
       _isSubmited = true;
     });
     if (!_formKey.currentState.validate()) return;
     _formKey.currentState.save();
-    Product data = Product(
-        title: _formData['title'],
-        price: _formData['price'],
-        description: _formData['description'],
-        image: _formData['image']);
     if (selectedProductIndex == null) {
-      addProduct(data);
+      addProduct(_formData['title'], _formData['description'],
+          _formData['price'], _formData['image']);
     } else {
-      updateProduct(data);
+      updateProduct(_formData['title'], _formData['description'],
+          _formData['price'], _formData['image']);
     }
 
-    Navigator.pushReplacementNamed(context, '/products');
+    Navigator.pushReplacementNamed(context, '/products')
+        .then((_) => setSelectedProduct(null));
   }
 
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import './../scoped_models/users.dart';
+import './../scoped_models/connected_models.dart';
 
 import './../validation/validation.dart';
 

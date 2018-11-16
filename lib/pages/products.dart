@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import './../scoped_models/products.dart';
+import './../scoped_models/connected_models.dart';
 import './../widgets/products/products.dart';
 
 class ProductsPage extends StatelessWidget {
@@ -40,7 +40,7 @@ class ProductsPage extends StatelessWidget {
           ScopedModelDescendant<ProductsModel>(
             builder: (BuildContext context, Widget child, ProductsModel model) {
               return IconButton(
-                icon: Icon(model.displayFavoriteOnly
+                icon: Icon(model.displayFavoritesOnly
                     ? Icons.favorite
                     : Icons.favorite_border),
                 onPressed: () {
