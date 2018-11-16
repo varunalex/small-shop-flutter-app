@@ -1,42 +1,43 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
+import 'package:scoped_model/scoped_model.dart';
+import './../scoped_models/products.dart';
+import './../models/product.dart';
+
 import './../widgets/products/ui_elements/title_defaut.dart';
 
 class ProductPage extends StatelessWidget {
-  final String title;
-  final String imageUrl;
-  final double price;
-  final String description;
+  final int productIndex;
   // constructor
-  ProductPage(this.title, this.imageUrl, this.price, this.description);
+  ProductPage(this.productIndex);
 
-  _showWarningDialog(BuildContext context, title) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Delete product - ' + title),
-          content: Text('Are you sure to delete this product?'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Descard'),
-              onPressed: () => Navigator.pop(context),
-            ),
-            FlatButton(
-              child: Text('Continue'),
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context, true);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // _showWarningDialog(BuildContext context, title) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Delete product - ' + title),
+  //         content: Text('Are you sure to delete this product?'),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             child: Text('Descard'),
+  //             onPressed: () => Navigator.pop(context),
+  //           ),
+  //           FlatButton(
+  //             child: Text('Continue'),
+  //             onPressed: () {
+  //               Navigator.pop(context);
+  //               Navigator.pop(context, true);
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
-  Widget _buildAddressPriceRow() {
+  Widget _buildAddressPriceRow(double price) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -72,34 +73,39 @@ class ProductPage extends StatelessWidget {
         Navigator.pop(context, false);
         return Future.value(false);
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image.asset(imageUrl),
-            TitleDefault(title),
-            _buildAddressPriceRow(),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                description,
-                textAlign: TextAlign.center,
-              ),
+      child: ScopedModelDescendant<ProductsModel>(
+        builder: (BuildContext context, Widget child, ProductsModel model) {
+          final Product product = model.products[productIndex];
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(product.title),
             ),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: RaisedButton(
-                textColor: Colors.white,
-                child: Text('Delete'),
-                onPressed: () => _showWarningDialog(context, title),
-                color: Theme.of(context).accentColor,
-              ),
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(product.image),
+                TitleDefault(product.title),
+                _buildAddressPriceRow(product.price),
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    product.description,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: RaisedButton(
+                    textColor: Colors.white,
+                    child: Text('Delete'),
+                    onPressed: () {},
+                    color: Theme.of(context).accentColor,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
