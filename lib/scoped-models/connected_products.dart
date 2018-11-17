@@ -1,16 +1,15 @@
 import 'package:scoped_model/scoped_model.dart';
-import './../models/product.dart';
-import './../models/user.dart';
 
-class ConnectedModels extends Model {
+import '../models/product.dart';
+import '../models/user.dart';
+
+class ConnectedProductsModel extends Model {
   List<Product> _products = [];
   int _selProductIndex;
-  User _authenticatedUser =
-      User(id: 'sdfsdf', password: 'password', email: 'sdfsd@gmail.com');
+  User _authenticatedUser;
 
   void addProduct(
-      String title, String description, double price, String image) {
-    print(_authenticatedUser.email);
+      String title, String description, String image, double price) {
     final Product newProduct = Product(
         title: title,
         description: description,
@@ -23,7 +22,7 @@ class ConnectedModels extends Model {
   }
 }
 
-class ProductsModel extends ConnectedModels {
+class ProductsModel extends ConnectedProductsModel {
   bool _showFavorites = false;
 
   List<Product> get allProducts {
@@ -53,8 +52,7 @@ class ProductsModel extends ConnectedModels {
   }
 
   void updateProduct(
-      String title, String description, double price, String image) {
-    print(_authenticatedUser.email);
+      String title, String description, String image, double price) {
     final Product updatedProduct = Product(
         title: title,
         description: description,
@@ -72,7 +70,6 @@ class ProductsModel extends ConnectedModels {
   }
 
   void toggleProductFavoriteStatus() {
-    print(_authenticatedUser.email);
     final bool isCurrentlyFavorite = selectedProduct.isFavorite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
     final Product updatedProduct = Product(
@@ -98,9 +95,8 @@ class ProductsModel extends ConnectedModels {
   }
 }
 
-class UsersModel extends ConnectedModels {
-  void login(String email, String password) {
-    _authenticatedUser =
-        User(id: 'fdalsdfasf', email: email, password: password);
+class UserModel extends ConnectedProductsModel {
+    void login(String email, String password) {
+    _authenticatedUser = User(id: 'fdalsdfasf', email: email, password: password);
   }
 }

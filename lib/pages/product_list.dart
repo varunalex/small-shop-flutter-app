@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:scoped_model/scoped_model.dart';
 
-import './../scoped_models/connected_models.dart';
-
 import './product_edit.dart';
+import '../scoped-models/main.dart';
 
 class ProductListPage extends StatelessWidget {
-  Widget _buildActionButton(
-      BuildContext context, int index, ProductsModel model) {
+  Widget _buildEditButton(BuildContext context, int index, MainModel model) {
     return IconButton(
       icon: Icon(Icons.edit),
       onPressed: () {
@@ -15,7 +14,7 @@ class ProductListPage extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (BuildContext context) {
-              return EditProductPage();
+              return ProductEditPage();
             },
           ),
         );
@@ -25,20 +24,23 @@ class ProductListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant(
-      builder: (BuildContext context, Widget child, ProductsModel model) {
+    return ScopedModelDescendant<MainModel>(
+      builder: (BuildContext context, Widget child, MainModel model) {
         return ListView.builder(
           itemBuilder: (BuildContext context, int index) {
             return Dismissible(
               key: Key(model.allProducts[index].title),
-              background: Container(
-                color: Colors.red,
-              ),
               onDismissed: (DismissDirection direction) {
                 if (direction == DismissDirection.endToStart) {
+                  model.selectProduct(index);
                   model.deleteProduct();
+                } else if (direction == DismissDirection.startToEnd) {
+                  print('Swiped start to end');
+                } else {
+                  print('Other swiping');
                 }
               },
+              background: Container(color: Colors.red),
               child: Column(
                 children: <Widget>[
                   ListTile(
@@ -47,11 +49,11 @@ class ProductListPage extends StatelessWidget {
                           AssetImage(model.allProducts[index].image),
                     ),
                     title: Text(model.allProducts[index].title),
-                    subtitle: Text(
-                        '\$\ ${model.allProducts[index].price.toString()}'),
-                    trailing: _buildActionButton(context, index, model),
+                    subtitle:
+                        Text('\$${model.allProducts[index].price.toString()}'),
+                    trailing: _buildEditButton(context, index, model),
                   ),
-                  Divider(),
+                  Divider()
                 ],
               ),
             );

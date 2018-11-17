@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
-import './../../models/product.dart';
-import './../../scoped_models/connected_models.dart';
 
-import './ui_elements/title_defaut.dart';
+import 'package:scoped_model/scoped_model.dart';
+
 import './price_tag.dart';
 import './address_tag.dart';
+import '../ui_elements/title_default.dart';
+import '../../models/product.dart';
+import '../../scoped-models/main.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
   final int productIndex;
 
+  ProductCard(this.product, this.productIndex);
+
   Widget _buildTitlePriceRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        TitleDefault(product.title),
-        SizedBox(
-          width: 10.0,
-        ),
-        PriceTag(product.price.toString()),
-      ],
+    return Container(
+      padding: EdgeInsets.only(top: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          TitleDefault(product.title),
+          SizedBox(
+            width: 8.0,
+          ),
+          PriceTag(product.price.toString())
+        ],
+      ),
     );
   }
 
@@ -30,12 +36,12 @@ class ProductCard extends StatelessWidget {
       children: <Widget>[
         IconButton(
           icon: Icon(Icons.info),
-          color: Colors.black,
+          color: Theme.of(context).accentColor,
           onPressed: () => Navigator.pushNamed<bool>(
               context, '/product/' + productIndex.toString()),
         ),
-        ScopedModelDescendant(
-          builder: (BuildContext context, Widget child, ProductsModel model) {
+        ScopedModelDescendant<MainModel>(
+          builder: (BuildContext context, Widget child, MainModel model) {
             return IconButton(
               icon: Icon(model.allProducts[productIndex].isFavorite
                   ? Icons.favorite
@@ -52,21 +58,19 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  ProductCard(this.product, this.productIndex);
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Column(
         children: <Widget>[
           Image.asset(product.image),
-          Container(
-            margin: EdgeInsets.only(top: 10.0, bottom: 0),
-            child: _buildTitlePriceRow(),
-          ),
-          AddressTag('Kegalle, Sri Lanka'),
-          _buildActionButtons(context),
+          _buildTitlePriceRow(),
+          AddressTag('Union Square, San Francisco'),
+          Text(product.userEmail),
+          _buildActionButtons(context)
         ],
       ),
     );
+    ;
   }
 }

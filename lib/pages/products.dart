@@ -1,30 +1,26 @@
 import 'package:flutter/material.dart';
+
 import 'package:scoped_model/scoped_model.dart';
-import './../scoped_models/connected_models.dart';
-import './../widgets/products/products.dart';
+
+import '../widgets/products/products.dart';
+import '../scoped-models/main.dart';
 
 class ProductsPage extends StatelessWidget {
-  Widget _buildDrawer(BuildContext context) {
+  Widget _buildSideDrawer(BuildContext context) {
     return Drawer(
       child: Column(
         children: <Widget>[
           AppBar(
             automaticallyImplyLeading: false,
             title: Text('Choose'),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
           ),
           ListTile(
-            leading: Icon(Icons.mode_edit),
-            title: Text('Products Page'),
-            onTap: () => Navigator.pushNamed(context, '/admin'),
-          ),
+            leading: Icon(Icons.edit),
+            title: Text('Manage Products'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/admin');
+            },
+          )
         ],
       ),
     );
@@ -33,12 +29,12 @@ class ProductsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: _buildDrawer(context),
+      drawer: _buildSideDrawer(context),
       appBar: AppBar(
-        title: Text('Shop'),
+        title: Text('EasyList'),
         actions: <Widget>[
-          ScopedModelDescendant<ProductsModel>(
-            builder: (BuildContext context, Widget child, ProductsModel model) {
+          ScopedModelDescendant<MainModel>(
+            builder: (BuildContext context, Widget child, MainModel model) {
               return IconButton(
                 icon: Icon(model.displayFavoritesOnly
                     ? Icons.favorite
@@ -48,7 +44,7 @@ class ProductsPage extends StatelessWidget {
                 },
               );
             },
-          ),
+          )
         ],
       ),
       body: Products(),
