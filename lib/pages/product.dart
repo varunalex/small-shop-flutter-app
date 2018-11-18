@@ -9,10 +9,8 @@ import '../models/product.dart';
 import '../scoped-models/main.dart';
 
 class ProductPage extends StatelessWidget {
-  final int productIndex;
-
-  ProductPage(this.productIndex);
-
+  final Product product;
+  ProductPage(this.product);
   Widget _buildAddressPriceRow(double price) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -38,37 +36,40 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(onWillPop: () {
-      print('Back button pressed!');
-      Navigator.pop(context, false);
-      return Future.value(false);
-    }, child: ScopedModelDescendant<MainModel>(
-      builder: (BuildContext context, Widget child, MainModel model) {
-        final Product product = model.allProducts[productIndex];
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(product.title),
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Image.network(product.image),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: TitleDefault(product.title),
-              ),
-              _buildAddressPriceRow(product.price),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Text(
-                  product.description,
-                  textAlign: TextAlign.center,
-                ),
-              )
-            ],
-          ),
-        );
+    return WillPopScope(
+      onWillPop: () {
+        print('Back button pressed!');
+        Navigator.pop(context, false);
+        return Future.value(false);
       },
-    ));
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(product.title),
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            FadeInImage(
+              image: NetworkImage(product.image),
+              placeholder: AssetImage('assets/imageloading.gif'),
+              height: 300.0,
+              fit: BoxFit.cover,
+            ),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: TitleDefault(product.title),
+            ),
+            _buildAddressPriceRow(product.price),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                product.description,
+                textAlign: TextAlign.center,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
