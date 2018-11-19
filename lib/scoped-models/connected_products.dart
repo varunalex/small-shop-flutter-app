@@ -288,6 +288,14 @@ class UserModel extends ConnectedProductsModel {
       notifyListeners();
     }
   }
+
+  void logout() async {
+    _authenticatedUser = null;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('userId');
+    prefs.remove('userEmail');
+    prefs.remove('token');
+  }
 }
 
 class UtilityModel extends ConnectedProductsModel {
